@@ -17,7 +17,7 @@ const Login = (props:IProps) => {
         verify: ''
     })
     const [isShowVerifyCode, setIsShowVerifyCode] = useState(false)
-    const {isShow = false} = props;
+    const {isShow = false, onClose} = props;
 
     const handleClose = () => {
 
@@ -41,7 +41,20 @@ const Login = (props:IProps) => {
         })
         // setIsShowVerifyCode(true)
     }
-    const handleLogin = () => {}
+
+    const handleLogin = () => {
+        request.post('/api/user/login', {
+            ...form,
+            identity_type: 'phone'
+        }).then((res:any) => {
+            if (res?.code === 0) {
+                //登录成功
+                onClose && onClose()
+            }else {
+                message.error(res?.msg || '未知错误')
+            }
+        })
+    }
     const handleOAuthGit = () => {}
 
     const handleFormChange = (e:ChangeEvent<HTMLInputElement>) => {
